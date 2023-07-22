@@ -1,0 +1,59 @@
+CREATE TABLE Coches (
+    id SERIAL PRIMARY KEY,
+    marca VARCHAR(50) NOT NULL,
+    modelo VARCHAR(50) NOT NULL,
+    anio INT NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    detalles TEXT
+);
+
+drop table coches
+
+-- Crear una tabla temporal con marcas y sus modelos reales
+CREATE TEMP TABLE MarcasModelos (
+    marca VARCHAR(50),
+    modelo VARCHAR(50)
+);
+
+-- Insertar datos de marcas y modelos reales en la tabla temporal
+INSERT INTO MarcasModelos (marca, modelo)
+VALUES
+    ('Toyota', 'Corolla'),
+    ('Toyota', 'Camry'),
+    ('Toyota', 'RAV4'),
+    ('Ford', 'Mustang'),
+    ('Ford', 'Fiesta'),
+    ('Ford', 'Explorer'),
+    ('Honda', 'Civic'),
+    ('Honda', 'Accord'),
+    ('Honda', 'CR-V'),
+    ('Chevrolet', 'Camaro'),
+    ('Chevrolet', 'Silverado'),
+    ('Chevrolet', 'Equinox'),
+    ('Volkswagen', 'Golf'),
+    ('Volkswagen', 'Jetta'),
+    ('Volkswagen', 'Tiguan');
+
+-- Insertar datos aleatorios en la tabla Coches utilizando las marcas y modelos reales
+INSERT INTO Coches (marca, modelo, anio, color, precio, detalles)
+SELECT
+    mm.marca,
+    mm.modelo,
+    FLOOR(RANDOM() * 30) + 1990, -- Año aleatorio entre 1990 y 2019
+    CASE
+        WHEN RANDOM() < 0.3 THEN 'Rojo'
+        WHEN RANDOM() < 0.3 THEN 'Azul'
+        WHEN RANDOM() < 0.2 THEN 'Negro'
+        WHEN RANDOM() < 0.1 THEN 'Blanco'
+        WHEN RANDOM() < 0.1 THEN 'Gris'
+        WHEN RANDOM() < 0.05 THEN 'Plateado'
+        ELSE 'Verde'
+    END,
+    CAST(10000 + RANDOM() * 30000 AS NUMERIC(10, 2)), -- Precio aleatorio entre 10000 y 40000 con dos decimales
+    CONCAT('Detalles del ', mm.marca, ' ', mm.modelo)
+FROM MarcasModelos mm;
+
+
+
+select * from coches
